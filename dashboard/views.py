@@ -1,3 +1,4 @@
+import wikipedia
 from django import contrib
 from django.core.checks import messages
 from django.forms.widgets import FileInput
@@ -7,11 +8,11 @@ from django.contrib import messages
 from django.views import generic
 from youtubesearchpython import VideosSearch
 import requests
+import wikipedia
 
 # Create your views here.
 def home(request):
     return render(request, 'dashboard/home.html')
-
 
 def notes(request):
     if request.method == "POST":
@@ -72,9 +73,8 @@ def homework(request):
         'form': form, }
     return render(request, 'dashboard/homework.html', context)
 
-
 def update_homework(request, pk=None):
-    homework = Homework.objectc.gets(id=pk)
+    homework = Homework.object.gets(id=pk)
     if homework.is_finished == True:
         homework.is_finished = False
     else:
@@ -82,17 +82,15 @@ def update_homework(request, pk=None):
     homework.save()
     return redirect('homework')
 
-
 def delete_homework(request, pk=None):
     Homework.objects.get(id=pk).delete()
     return redirect("homework")
-
 
 def youtube(request):
     if request.method == "POST":
         form = DashboardForm(request.POST)
         text = request.POST['text']
-        video = VideosSearch(text, limit=10)
+        video = VideosSearch(text,limit=10)
         result_list = []
         for i in video.result()['result']:
             result_dict = {
@@ -118,9 +116,8 @@ def youtube(request):
         return render(request,'dashboard/youtube.html',context)
     else:
         form = DashboardForm()
-    context = {'form:form'}
+    context = {"form":form}
     return render(request,"dashboard/youtube.html",context)
-
 
 def todo(request):
     if request.method == 'POST':
@@ -200,7 +197,7 @@ def books(request):
         return render(request,'dashboard/books.html',context)
     else:
         form = DashboardForm()
-    context = {'form:form'}
+    context = {"form":form}
     return render(request,"dashboard/books.html",context)
 
 def dictionary(request):
@@ -235,3 +232,21 @@ def dictionary(request):
         context = {'form':form}
     return render(request,"dashboard/dictionary.html",context)
 
+def wiki(request):
+    if request.method == 'POST':
+        text = request.POST['text']
+        form = DashboardForm(request.POST)
+        search = wikipedia.page(text)
+        context = {
+            'form':form,
+            'title':search.title,
+            'link':search.url,
+            'details':search.summary
+        }
+        return render(request, "dashboard/wiki.html",context)
+    else:
+        form = DashboardForm()
+        context = {
+            'form':form
+        }
+    return render(request,"dashboard/wiki.html",context)
