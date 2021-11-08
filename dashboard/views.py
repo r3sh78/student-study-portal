@@ -1,6 +1,6 @@
-import wikipedia
 from django import contrib
 from django.core.checks import messages
+from django.db.models.query import RawQuerySet
 from django.forms.widgets import FileInput
 from django.shortcuts import redirect, render
 from .forms import *
@@ -9,6 +9,7 @@ from django.views import generic
 from youtubesearchpython import VideosSearch
 import requests
 import wikipedia
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def home(request):
@@ -27,11 +28,9 @@ def notes(request):
     context = {'notes': notes, 'form': form}
     return render(request, 'dashboard/notes.html', context)
 
-
 def delete_notes(request, pk=Notes):
     Notes.objects.get(id=pk).delete()
     return redirect("notes")
-
 
 class NotesDetailView(generic.DetailView):
     model = Notes
@@ -98,7 +97,7 @@ def youtube(request):
                 'title': i['title'],
                 'duration': i['duration'],
                 'thumbnail': i['thumbnails'][0]['url'],
-                'channel': i['channel'],
+                'channel': i['channel']['name'],
                 'link': i['link'],
                 'views': i['viewCount']['short'],
                 'published': i['publishedTime']
@@ -166,11 +165,6 @@ def delete_todo(request,pk=None):
     return redirect(("todo"))
 
 def books(request):
-    form =DashboardForm()
-    context = {'form':form}
-    return  render(request,"dashboard/books.html",context)
-
-def books(request):
     if request.method == "POST":
         form = DashboardForm(request.POST)
         text = request.POST['text']
@@ -180,14 +174,14 @@ def books(request):
         result_list = []
         for i in range(10):
             result_dict = {
-                'title': answer['title'][i]['volumeInfo']['title'],
-                'subtitle': answer['title'][i]['volumeInfo'].get('subtitle'),
-                'description': answer['title'][i]['volumeInfo'].get('description'),
-                'count': answer['title'][i]['volumeInfo'].get('count'),
-                'categories': answer['title'][i]['volumeInfo'].get('categories'),
-                'rating': answer['title'][i]['volumeInfo'].get('rating'),
-                'thumbnail': answer['title'][i]['volumeInfo'].get('thumbnail').get('thumbnail'),
-                'preview': answer['title'][i]['volumeInfo'].get('previewLink')
+                'title': answer['items'][i]['volumeInfo']['title'],
+                'subtitle': answer['items'][i]['volumeInfo'].get('subtitle'),
+                'description': answer['items'][i]['volumeInfo'].get('description'),
+                'count': answer['items'][i]['volumeInfo'].get('count'),
+                'categories': answer['items'][i]['volumeInfo'].get('categories'),
+                'rating': answer['items'][i]['volumeInfo'].get('rating'),
+                'thumbnail': answer['items'][i]['volumeInfo'].get('imageLinks').get('thumbnail'),
+                'preview': answer['items'][i]['volumeInfo'].get('previewLink')
             }
             result_list.append(result_dict)
             context = {
@@ -209,10 +203,10 @@ def dictionary(request):
         answer = r.json()
         try:
             phonetics = answer[0]['phonetics'][0]['text']
-            audio = answer[0]['phonetics'][0]['text']
-            definition = answer[0]['phonetics'][0]['text']
-            example = answer[0]['phonetics'][0]['text']
-            synonyms = answer[0]['phonetics'][0]['text']
+            audio = answer[0]['phonetics'][0]['audio']
+            definition = answer[0]['meanings'][0]['definitions'][0]['definition']
+            example = answer[0]['meanings'][0]['definitions'][0]['example']
+            synonyms = answer[0]['meanings'][0]['definitions'][0]['synonyms']
             context = {
                 'form':form,
                 'input':text,
@@ -251,7 +245,7 @@ def wiki(request):
         }
     return render(request,"dashboard/wiki.html",context)
 
-def conversion(request):
+"""def conversion(request):
     if request.method == "POST":
         form = ConversionForm(request.POST)
         if request.POST['measurement'] == 'length':
@@ -306,4 +300,17 @@ def conversion(request):
              'form':form,
              'input':False
     }
-    return render(request,"dashboard/conversion.html",context)
+    return render(request,"dashboard/conversion.html",context)"""
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request,f"Account created for {username} !!")
+    else:
+        context = {
+            'form':form
+        }
+    return render(request, "dashboard/register.html",context)
