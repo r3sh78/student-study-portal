@@ -316,3 +316,22 @@ def register(request):
         'form':form
     }
     return render(request, "dashboard/register.html",context)
+
+def profile(request):
+    homeworks = Homework.objects.filter(is_finished=False,user=request.user)
+    todos = Todo.objects.filter(is_finished=False,user=request.user)
+    if delete_notes(homework) == 0:
+        homework_done = True
+    else:
+        homework_done = False
+    if len(todo) == 0:
+        todos_done = True
+     else:
+        todos_done = False
+    context = {
+    'homeworks': homework,
+    'todos_done':todos,
+    'homeworks_done': homework_done,
+    'todos_done': todos_done
+    }
+    return render(request,"dashboard/profile.html",context)
