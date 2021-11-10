@@ -309,8 +309,10 @@ def register(request):
             form.save()
             username = form.cleaned_data.get('username')
             messages.success(request,f"Account created for {username} !!")
+            return redirect("login")
     else:
-        context = {
-            'form':form
-        }
+        form = UserRegistrationForm()
+    context = {
+        'form':form
+    }
     return render(request, "dashboard/register.html",context)
