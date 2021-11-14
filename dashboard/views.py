@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 def home(request):
     return render(request, 'dashboard/home.html')
 
+@login_required
 def notes(request):
     if request.method == "POST":
         form = NotesForm(request.POST)
@@ -28,6 +29,7 @@ def notes(request):
     context = {'notes': notes, 'form': form}
     return render(request, 'dashboard/notes.html', context)
 
+@login_required
 def delete_notes(request, pk=Notes):
     Notes.objects.get(id=pk).delete()
     return redirect("notes")
@@ -36,6 +38,7 @@ class NotesDetailView(generic.DetailView):
     model = Notes
 
 
+@login_required
 def homework(request):
     if request.method == "POST":
         form = HomeworkForm(request.POST)
@@ -72,6 +75,7 @@ def homework(request):
         'form': form, }
     return render(request, 'dashboard/homework.html', context)
 
+@login_required
 def update_homework(request, pk=None):
     homework = Homework.object.gets(id=pk)
     if homework.is_finished == True:
@@ -81,6 +85,7 @@ def update_homework(request, pk=None):
     homework.save()
     return redirect('homework')
 
+@login_required
 def delete_homework(request, pk=None):
     Homework.objects.get(id=pk).delete()
     return redirect("homework")
@@ -118,6 +123,7 @@ def youtube(request):
     context = {"form":form}
     return render(request,"dashboard/youtube.html",context)
 
+@login_required
 def todo(request):
     if request.method == 'POST':
         form = TodoForm(request.POST)
@@ -151,6 +157,7 @@ def todo(request):
     }
     return render(request, "dashboard/todo.html",context)
 
+@login_required
 def update_todo(request,pk=None):
     todo = Todo.objects.get(id=pk)
     if todo.is_finished == True:
@@ -160,6 +167,7 @@ def update_todo(request,pk=None):
     todo.save()
     return redirect('todo')
 
+@login_required
 def delete_todo(request,pk=None):
     Todo.objects.get(id=pk).delete()
     return redirect(("todo"))
@@ -245,7 +253,7 @@ def wiki(request):
         }
     return render(request,"dashboard/wiki.html",context)
 
-"""def conversion(request):
+def conversion(request):
     if request.method == "POST":
         form = ConversionForm(request.POST)
         if request.POST['measurement'] == 'length':
@@ -300,7 +308,7 @@ def wiki(request):
              'form':form,
              'input':False
     }
-    return render(request,"dashboard/conversion.html",context)"""
+    return render(request,"dashboard/conversion.html",context)
 
 def register(request):
     if request.method == 'POST':
@@ -317,6 +325,7 @@ def register(request):
     }
     return render(request, "dashboard/register.html",context)
 
+@login_required
 def profile(request):
     homeworks = Homework.objects.filter(is_finished=False,user=request.user)
     todos = Todo.objects.filter(is_finished=False,user=request.user)
