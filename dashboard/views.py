@@ -38,6 +38,7 @@ class NotesDetailView(generic.DetailView):
     model = Notes
 
 
+
 @login_required
 def homework(request):
     if request.method == "POST":
@@ -72,8 +73,10 @@ def homework(request):
     context = {
         'homeworks': homework,
         'homeworks_done': homework_done,
-        'form': form, }
+        'form': form,
+    }
     return render(request, 'dashboard/homework.html', context)
+
 
 @login_required
 def update_homework(request, pk=None):
@@ -123,6 +126,7 @@ def youtube(request):
     context = {"form":form}
     return render(request,"dashboard/youtube.html",context)
 
+
 @login_required
 def todo(request):
     if request.method == 'POST':
@@ -157,6 +161,7 @@ def todo(request):
     }
     return render(request, "dashboard/todo.html",context)
 
+
 @login_required
 def update_todo(request,pk=None):
     todo = Todo.objects.get(id=pk)
@@ -166,6 +171,7 @@ def update_todo(request,pk=None):
         todo.is_finished = True
     todo.save()
     return redirect('todo')
+
 
 @login_required
 def delete_todo(request,pk=None):
@@ -219,6 +225,7 @@ def dictionary(request):
                 'form':form,
                 'input':text,
                 'phonetics':phonetics,
+                'audio':audio,
                 'definition':definition,
                 'example':example,
                 'synonyms':synonyms
@@ -252,7 +259,7 @@ def wiki(request):
             'form':form
         }
     return render(request,"dashboard/wiki.html",context)
-
+""""
 def conversion(request):
     if request.method == "POST":
         form = ConversionForm(request.POST)
@@ -309,6 +316,7 @@ def conversion(request):
              'input':False
     }
     return render(request,"dashboard/conversion.html",context)
+"""
 
 def register(request):
     if request.method == 'POST':
