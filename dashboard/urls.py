@@ -5,7 +5,7 @@ urlpatterns = [
     path('',views.home,name="home"),
     path('notes',views.notes,name="notes"),
     path('delete_note/<int:pk>',views.delete_notes,name="delete-note"),
-    path('delete_note/<int:pk>',views.NotesDetailView.as_view(),name="notes-detail"),
+    path('notes_detail/<int:pk>',views.NotesDetailView.as_view(),name="notes-detail"),
 
     path('homework',views.homework,name="homework"),
     path('update_homework/<int:pk>',views.update_homework,name="update-homework"),
