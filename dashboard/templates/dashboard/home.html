@@ -1,7 +1,6 @@
 {% extends 'dashboard/base.html' %} 
 {% load static %} 
 {% block content %}
-
 <section class="container text-center">
   <h3>Welcome</h3>
 
@@ -102,6 +101,20 @@
               WikiPedia
             </h5>
             Homework and Assignments? Search wikipedia to get fast results
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-md-3">
+      <a href="{% url 'calculator' %}">
+        <div class="card">
+          <img class="card-img-top" src="{% static 'images/calculator.jpg' %}" alt="Notes image">
+          <div class="card-body">
+            <h5 class="card-title ">
+              Calculator
+            </h5>
+            A simple Calculator.
           </div>
         </div>
       </a>

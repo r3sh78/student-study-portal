@@ -120,7 +120,7 @@ body {
 }
 
 body {
-    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.5));
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.5));
     /*background: linear-gradient(to bottom, #33ccff 0%, #ff99cc 100%)*/
     overflow-x: hidden;
     background-repeat: no-repeat;
@@ -207,3 +207,7 @@ footer .column a+a {
 .account-heading {
     font-size: 2.5rem;
 }
+
+/* Calculator */
+
+
