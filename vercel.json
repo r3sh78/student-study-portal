@@ -14,6 +14,10 @@
   
   "routes": [
     {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "studentstudyportal/wsgi.py"
     }
